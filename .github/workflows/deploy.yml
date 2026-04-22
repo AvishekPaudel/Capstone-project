@@ -42,3 +42,14 @@ jobs:
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/pasal:latest .
           docker push ${{ secrets.DOCKER_USERNAME }}/pasal:latest
+      
+      - name: Run tests with coverage
+        run: |
+          pip install pytest pytest-django coverage
+          coverage run -m pytest
+          coverage report
+
+      - name: Lint Check
+        run: |
+          pip install flake8
+          flake8 .
