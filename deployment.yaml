@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pasal-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pasal
+  template:
+    metadata:
+      labels:
+        app: pasal
+    spec:
+      initContainers:
+        - name: migrate
+          image: keemanoodles26/pasal:latest
+          command: ["python", "manage.py", "migrate"]
+      containers:
+        - name: pasal
+          image: keemanoodles26/pasal:latest
+          env:
+            - name: DB_NAME
+              value: pasal
+            - name: DB_USER
+              value: postgres
+            - name: DB_PASSWORD
+              value: password
+            - name: DB_HOST
+              value: postgres
+          ports:
+            - containerPort: 8000
